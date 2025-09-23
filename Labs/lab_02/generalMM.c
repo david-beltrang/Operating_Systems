@@ -32,76 +32,165 @@
  *  - Encapsular los datos para enviarlos a la función MxM
  *  - Se desencapsulan los datos dentro de la función MxM (descomprimen)
 *************************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
 
-double *mA, *mB, *mC;
 
-// Function to print matrices
-void imprMatrices(int n, double *matriz){
-    if(n<9){
-        printf("\n#######################################################\n");
-    } else {
-        printf("\n#######################################################\n");
+// Crear matriz NxN
+float** crearMatriz(int N) {
+    // Crear matriz NxN 
+    float** matriz = (float**)malloc(N * sizeof(float*));
+    // Asignar memoria a cada fila
+    for (int i = 0; i < N; i++) {
+        matriz[i] = (float*)malloc(N* sizeof(float));
     }
-};
+    return matriz;
+}
 
-   for(int i=0; i<n*n; i++){
-                if(i%n==0) printf("\n");
-        printf(" %f ", matriz[i]);
-   }
-
-
-int main(int argc, char *argv[]){
-    if(argc<=2){
-        printf("Numero argumentos incorrectos\n");
-        printf("\n\t $ejecutable.exe DIM \n");
-        return -1;
-    }
-
-    int N = (int) atof(argv[1]);
-    if(N<=0){
-        printf("\n Valores deben ser mayor que cero\n");
-        return -1;
-    };
-
-
-    mA = (double *) malloc(N*N*sizeof(double));
-    mB = (double *) malloc(N*N*sizeof(double));
-    mC = (double *) calloc(N*N*sizeof(double));
-
-    // Initialize matrices with a random numbers
-    for(int i=0; i<N*N;i++){
-        mA[i]= (double) rand() / RAND_MAX;
-        mB[i]= (double) rand() / RAND_MAX;
-    }
-
-    // Initialize pointers for matrix multiplication
-    for(int i=0; i<N; i++){
-        for(int j=0; j<N; j++){
-            double sumaTemp, *pA, *pB;
-            sumaTemp = 0.0;
-            pA = mA + i*n;
-            pB = mB + j;
-            for(int k=0; k<N; k++, pA++, pB+=n){
-                sumaTemp += *pA * *pB;
-            }
-            mC[j+i*n] = sumaTemp;
+// Llenar matriz con valores aleatorios
+void llenarMatrix(int N, float** mA) {
+    // Llenar matriz con valores aleatorios
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            // Generar valores aleatorios entre 0 y 100
+            mA[i][j] = (float)(rand() % 100) * 0.1f;
         }
     }
+}
 
-    // Print all the matrices
-    imprMatrices(N, mA);
-    imprMatrices(N, mB);
-    imprMatrices(N, mC);
+// Imprimir matriz
+void imprimirMatrix(float** mA, int N) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            printf("%.2f ", mA[i][j]);
+        }
+        printf("\n");
+    }
+}
 
-    printf("\n\tFin del programa.............!\n");
-    
-    // Free allocated memory
-    free(mA);
-    free(mB);
-    free(mC);
+// Multiplicar matrices
+float** MultiplicarMatrix(float** mA, float** mB, int N) {
+    // Crear matriz resultado
+    float** mC = crearMatriz(N);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            mC[i][j] = 0.0;
+            for (int k = 0; k < N; k++) {
+                mC[i][j] += mA[i][k] * mB[k][j];
+            }
+        }
+    }
+    return mC;
+}
+
+// Liberar memoria
+void liberarMatriz(float** matriz, int N) {
+    // Liberar memoria de cada fila
+    for (int i = 0; i < N; i++) {
+        free(matriz[i]);
+    }
+    // Liberar memoria de la matriz
+    free(matriz);
+}
+
+// Calcular IMC
+float calcularIMC(float masa, float altura) {
+    return masa / (altura * altura);
+}
+
+// Categorizar la edad segun su rango 
+char* categoriaEdad(int edad) {
+    if (edad < 18) {
+        return "Menor de edad";
+    } else if (edad < 50) {
+        return "Adulto";
+    } else {
+        return "Tercera edad";
+    }
+}
+
+// Imprime Menú principal
+void mostrarMenu() {
+    printf("\n          MENU\n");
+    printf("1. Calcular IMC\n");
+    printf("2. Multiplicar matrices aleatorias\n");
+    printf("3. Salir\n");
+    printf("Seleccione una opcion: ");
+}
+
+int main() {
+    int opcion;
+    // Inicializar la semilla para números aleatorios
+    srand(time(NULL)); 
+
+    do {
+        // Mostrar menú en pantalla
+        mostrarMenu();
+        // Leer opción del usuario
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            // Caso 1: Calcular IMC
+            case 1: {
+                printf("\n  CALCULADOR DE IMC\n");
+                float masa, altura;
+                int edad;
+
+                printf("Ingrese su masa (kg): ");
+                scanf("%f", &masa);
+                printf("Ingrese su altura (m): ");
+                scanf("%f", &altura);
+                printf("Ingrese su edad (años): ");
+                scanf("%d", &edad);
+
+                float imc = calcularIMC(masa, altura);
+                char* categoriaE = categoriaEdad(edad);
+
+                printf("Su IMC es: %.2f\n", imc);
+                printf("Se encuentra en la categoria de edad: %s\n", categoriaE);
+                break;
+            }
+
+            // Caso 2: Multiplicar matrices aleatorias
+            case 2: {
+                int N;
+                printf("Ingrese el tamaño de las matrices (NxN): ");
+                scanf("%d", &N);
+
+                float** mA = crearMatriz(N);
+                float** mB = crearMatriz(N);
+
+                llenarMatrix(N, mA);
+                llenarMatrix(N, mB);
+
+                printf("\nMatriz A:\n");
+                imprimirMatrix(mA, N);
+
+                printf("\nMatriz B:\n");
+                imprimirMatrix(mB, N);
+
+                float** mC = MultiplicarMatrix(mA, mB, N);
+                printf("\nResultado de A x B:\n");
+                imprimirMatrix(mC, N);
+
+                liberarMatriz(mA, N);
+                liberarMatriz(mB, N);
+                liberarMatriz(mC, N);
+                break;
+            }
+
+            // Caso 3: Salir
+            case 3:
+                printf("Saliendo del programa...\n");
+                break;
+
+            default:
+                printf("Opcion inválida. Intente de nuevo.\n");
+                break;
+        }
+
+    } while (opcion != 3);
+
     return 0;
 }
