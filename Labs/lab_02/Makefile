@@ -1,18 +1,12 @@
-#########################################################################
-#  Fecha: Agosto 12 del 2025                                            #
-#  Autor: David Beltran Gomez                                           #
-#  Materia: Sistemas Operativos                                         #
-#  Makefile: Bash para automatizar instrucciones de compilacion         #
-#  Se requiere automatizar la compilacion                               #
-#########################################################################
-#Comando para invocar el compilador de C
+# Fecha: Agosto 12 del 2025
+# Autor: David Beltran Gomez
+# Materia: Sistemas Operativos
+# Makefile: Automatiza instrucciones de compilación
+
 GCC = gcc
-BIBLIOTECAS =
-MODULOS =
 
-PROGRAMAS = generalMM
+matrices_BeltranGomez: matrices_BeltranGomez.c modulo.c modulo.h
+        $(GCC) matrices_BeltranGomez.c modulo.c -o matrices_BeltranGomez
 
-all: $(PROGRAMAS)
-
-principal:
-        $(GCC) $(MODULO) $@.c -o $@
+clean:
+        rm -f *.o matrices_BeltranGomez
