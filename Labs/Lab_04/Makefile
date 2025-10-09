@@ -1,9 +1,8 @@
-  GNU nano 6.2                                                      Makefile                                                                # Fecha: 7 Octubre del 2025
 # Autor: David Beltran Gomez
 # Materia: Sistemas Operativos
 # Makefile: Automatiza instrucciones de compilación
 
-# Nombre del compilador
+# Definir el compilador (Variable estándar de Make para el compilador C)
 CC = gcc
 
 # Definir los ejecutables
@@ -14,17 +13,17 @@ all: $(EJECUTABLES)
 
 # Reglas explícitas de compilación usando $(CC)
 
-progra1: Challenge_01.c
-        $(CC) -o progra1 Challenge_01.c -Wall
+progra1: Challenge1.c
+	$(CC) -o progra1 Challenge1.c -Wall
 
-progra2: Challenge_02.c
-        $(CC) -o progra2 Challenge_02.c -Wall
+progra2: Challenge2.c
+	$(CC) -o progra2 Challenge2.c -Wall
 
-progra3: Challenge_03.c
-        $(CC) -o progra3 Challenge_03.c -Wall
+progra3: Challenge3.c
+	$(CC) -o progra3 Challenge3.c -Wall
 
 # Regla para limpiar los ejecutables
 clean:
-        rm -f $(EJECUTABLES)
+	rm -f $(EJECUTABLES)
 
 .PHONY: all clean
