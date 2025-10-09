@@ -13,14 +13,14 @@ all: $(EJECUTABLES)
 
 # Reglas explícitas de compilación usando $(CC)
 
-progra1: Challenge1.c
-	$(CC) -o progra1 Challenge1.c -Wall
+progra1: Challenge_01.c
+	$(CC) -o progra1 Challenge_01.c -Wall
 
-progra2: Challenge2.c
-	$(CC) -o progra2 Challenge2.c -Wall
+progra2: Challenge_02.c
+	$(CC) -o progra2 Challenge_02.c -Wall
 
-progra3: Challenge3.c
-	$(CC) -o progra3 Challenge3.c -Wall
+progra3: Challenge_03.c
+	$(CC) -o progra3 Challenge_03.c -Wall
 
 # Regla para limpiar los ejecutables
 clean:
