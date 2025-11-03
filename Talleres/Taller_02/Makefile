@@ -1,17 +1,40 @@
+#---------------------------------------------------------
+# Makefile - Multiplicación de matrices (Fork, Posix, OpenMP)
+# Autor: David Esteban Beltrán Gómez
+# Fecha: 30 Octubre 2025
+#---------------------------------------------------------
+
 GCC = gcc
-CFLAGS = -lm
-FOPENMP = -fopenmp -O3
+CFLAGS = -Wall -O3 -lm
+FOPENMP = -fopenmp
 POSIX = -lpthread
 
-PROGRAMAS = mmClasicaOpenMP 
+# Ejecutables a generar
+PROGRAMAS = mmClasicaFork mmClasicaPosix mmClasicaOpenMP mmFilasOpenMP
 
-All: $(PROGRAMAS)
+# Archivos fuente comunes
+FUENTES_COMUNES = operacionesMatrices.c operacionesTiempo.c
+HEADERS_COMUNES = operacionesMatrices.h operacionesTiempo.h
 
-mmClasicaFork:
-	$(GCC) $(CLFAGS) $@.c -o $@ 
+# Regla por defecto
+all: $(PROGRAMAS)
 
-mmClasicaOpenMP:
-	$(GCC) $(CLFAGS) $@.c -o $@ $(FOPENMP)
+# --- Implementación con Fork ---
+mmClasicaFork: mmClasicaFork.c operacionesFork.c $(FUENTES_COMUNES) $(HEADERS_COMUNES)
+	$(GCC) $(CFLAGS) $^ -o $@
 
+# --- Implementación con POSIX threads ---
+mmClasicaPosix: mmClasicaPosix.c operacionesHilos.c $(FUENTES_COMUNES) $(HEADERS_COMUNES)
+	$(GCC) $(CFLAGS) $^ -o $@ $(POSIX)
+
+# --- Implementación clásica OpenMP ---
+mmClasicaOpenMP: mmClasicaOpenMP.c $(FUENTES_COMUNES) $(HEADERS_COMUNES)
+	$(GCC) $(CFLAGS) $^ -o $@ $(FOPENMP)
+
+# --- Implementación por filas con OpenMP ---
+mmFilasOpenMP: mmFilasOpenMP.c $(FUENTES_COMUNES) $(HEADERS_COMUNES)
+	$(GCC) $(CFLAGS) $^ -o $@ $(FOPENMP)
+
+# Limpieza de binarios
 clean:
-	$(RM) $(PROGRAMAS) 
+	rm -f $(PROGRAMAS) *.o
