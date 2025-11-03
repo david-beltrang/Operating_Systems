@@ -3,6 +3,14 @@
 
 #include <pthread.h>
 
+// Declaración de MM_mutex como extern
+extern pthread_mutex_t MM_mutex;
+
+// Declaración de matrices como extern
+extern double *matrixA;
+extern double *matrixB;
+extern double *matrixC;
+
 // Estructura para pasar parámetros a los hilos
 struct parametros {
     int idH;    // ID del hilo
@@ -11,6 +19,6 @@ struct parametros {
 };
 
 // Función que multiplica las matrices en paralelo usando hilos
-void *multiMatrix(void *variables);
+void *multiplicarMatrix(void *variables);
 
 #endif // OPERACIONES_HILOS_H
