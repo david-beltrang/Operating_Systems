@@ -13,12 +13,12 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <time.h>
-#include "operacionesMatrices.h"
 #include "operacionesFork.h"
 #include "operacionesTiempo.h"
+#include "operacionesMatrices.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
+    if (argc != 3) {
         printf("\n \t\tUse: $./nom_ejecutable Size Hilos \n");
         exit(0);
     }
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
             int start_row = i * rows_per_process;
             int end_row = (i == num_P - 1) ? N : start_row + rows_per_process;
             
-            multiMatrix(matA, matB, matC, N, start_row, end_row); 
+            multiplicarMatrix(matA, matB, matC, N, start_row, end_row); 
             
             if (N < 9) {
                 printf("\nChild PID %d calculated rows %d to %d:\n", getpid(), start_row, end_row - 1);

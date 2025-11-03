@@ -17,7 +17,7 @@
 #include "operacionesTiempo.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
+    if (argc != 3) {
         printf("\n Use: $./clasicaOpenMP SIZE Hilos \n\n");
         exit(0);
     }
