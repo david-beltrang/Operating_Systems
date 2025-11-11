@@ -88,3 +88,9 @@ int main() {
 
     return 0;  // Termina el programa con éxito
 }
+/*CONCULSIONES:
+    Aprendido a manejar directorios y archivos en C utilizando las funciones de la biblioteca estándar. 
+    Hemos visto cómo abrir un directorio, leer sus entradas y obtener información detallada sobre cada archivo, como sus permisos y fechas de modificación. 
+    Además, hemos aprendido a filtrar archivos basándonos en criterios específicos, como la fecha de modificación. 
+    Este conocimiento es fundamental para trabajar con sistemas de archivos en aplicaciones de C.
+*/

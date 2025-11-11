@@ -56,3 +56,10 @@ int main() {
     closedir(d);
     return 0;  // Termina el programa con éxito
 }
+
+/* CONSLUSIONES:
+    Aprendimos a manejar directorios y archivos en C utilizando las funciones de la biblioteca estándar. 
+    Hemos visto cómo abrir un directorio, leer sus entradas y obtener información detallada sobre cada archivo, como su nombre y tamaño. 
+    Además, hemos aprendido a filtrar solo los archivos regulares, ignorando subdirectorios y otros tipos de entradas. 
+    Este conocimiento es fundamental para trabajar con sistemas de archivos en aplicaciones de C.
+    */
