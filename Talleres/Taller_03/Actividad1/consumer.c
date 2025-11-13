@@ -16,11 +16,9 @@ static int shm_fd = -1;
 static compartir_datos *compartir = MAP_FAILED;
 
 /**
- * Manejador de señal SIGINT (Ctrl + C)
- * 
- * Este manejador se encarga de cerrar correctamente los recursos
- * en caso de que el proceso consumidor sea interrumpido por el usuario.
- * Evita fugas de memoria o semáforos abiertos.
+ * Manejador de señal SIGINT 
+ * Cierra correctamente los recursos en caso de que el proceso consumidor
+ * sea interrumpido por el usuario. Evita fugas de memoria o semáforos abiertos.
  */
 void handle_sigint(int sig) {
     (void)sig;
@@ -36,7 +34,7 @@ int main(void) {
     // Se asocia el manejador de señal para cerrar recursos si se interrumpe el programa
     signal(SIGINT, handle_sigint);
 
-    /* Abrir semáforos existentes (no los crea, solo se conecta a ellos) */
+    // Abrir semáforos existentes (Conectados por el productor)
     vacio = sem_open(SEM_VACIO_NAME, 0);
     lleno = sem_open(SEM_LLENO_NAME, 0);
     if (vacio == SEM_FAILED || lleno == SEM_FAILED) {
@@ -44,7 +42,7 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-    /* Abrir la memoria compartida ya creada por el productor */
+    // Abrir la memoria compartida ya creada por el productor
     shm_fd = shm_open(SHM_NAME, O_RDWR, 0);
     if (shm_fd < 0) {
         perror("shm_open (consumer)");
@@ -61,14 +59,11 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-    /**
-     * Nota:
-     * No se reinicia el índice de salida aquí porque podría sobrescribir
-     * datos ya generados por el productor. Se asume que el productor
-     * ya inicializó este valor correctamente.
-     */
+     /* No se reinicia el índice de salida aquí porque podría sobrescribir
+      * datos ya generados por el productor.
+      */
 
-    // Bucle principal de consumo
+    // Bucle principal de consumo (consume 10 elementos)
     for (int i = 1; i <= 10; i++) {
         // Espera hasta que haya un elemento lleno disponible
         if (sem_wait(lleno) == -1) {
@@ -93,21 +88,32 @@ int main(void) {
     }
 
     // Liberar la memoria compartida y cerrar el descriptor
-    if (munmap(compartir, sizeof(compartir_datos)) == -1) perror("munmap");
-    if (close(shm_fd) == -1) perror("close shm_fd");
+    if (munmap(compartir, sizeof(compartir_datos)) == -1)
+        perror("munmap");
+
+    // Cerrar el descriptor de memoria compartida
+    if (close(shm_fd) == -1)
+        perror("close shm_fd");
 
     // Cerrar los semáforos locales
     sem_close(vacio);
     sem_close(lleno);
 
-    /**
-     * El consumidor elimina los nombres del sistema ya que normalmente
-     * es el último en ejecutarse. Se ignoran errores si los recursos
-     * ya no existen (errno == ENOENT).
+    /* El consumidor elimina los nombres del sistema ya que normalmente
+     * es el último en ejecutarse.
      */
-    if (sem_unlink(SEM_VACIO_NAME) == -1 && errno != ENOENT) perror("sem_unlink vacio");
-    if (sem_unlink(SEM_LLENO_NAME) == -1 && errno != ENOENT) perror("sem_unlink lleno");
-    if (shm_unlink(SHM_NAME) == -1 && errno != ENOENT) perror("shm_unlink");
+
+    // Eliminar los semáforos y la memoria compartida del sistema
+    if (sem_unlink(SEM_VACIO_NAME) == -1 && errno != ENOENT)
+        perror("sem_unlink vacio");
+    
+    // Eliminar el semáforo lleno
+    if (sem_unlink(SEM_LLENO_NAME) == -1 && errno != ENOENT)
+        perror("sem_unlink lleno");
+
+    // Eliminar la memoria compartida
+    if (shm_unlink(SHM_NAME) == -1 && errno != ENOENT)
+        perror("shm_unlink");
 
     printf("Consumidor: terminado y recursos liberados.\n");
     return 0;

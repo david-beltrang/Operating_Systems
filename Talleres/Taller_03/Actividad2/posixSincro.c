@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     buffer_index = 0;
     buffer_print_index = 0;
 
-    // Crear el hilo spooler (que imprime)
+    // Crear el hilo spooler
     if ((r = pthread_create(&tid_spooler, NULL, spooler, NULL)) != 0) {
         fprintf(stderr, "Error = %d (%s)\n", r, strerror(r));
         exit(1);
@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
     // Crear 10 hilos productores
     for (i = 0; i < 10; i++) {
         thread_no[i] = i;
+        // Crear el hilo productor
         if ((r = pthread_create(&tid_producer[i], NULL, producer, (void *)&thread_no[i])) != 0) {
             fprintf(stderr, "Error = %d (%s)\n", r, strerror(r));
             exit(1);
@@ -40,6 +41,7 @@ int main(int argc, char **argv) {
 
     // Esperar a que todos los productores terminen
     for (i = 0; i < 10; i++) {
+        // Esperar al hilo productor
         if ((r = pthread_join(tid_producer[i], NULL)) != 0) {
             fprintf(stderr, "Error = %d (%s)\n", r, strerror(r));
             exit(1);
@@ -59,11 +61,13 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+// Hilo productor
 void *producer(void *arg) {
     int i, r;
     int my_id = *((int *)arg); // ID del hilo productor
     int count = 0;
 
+    // Producir 10 líneas
     for (i = 0; i < 10; i++) {
 
         // Bloquear el mutex para proteger el acceso al buffer
@@ -79,6 +83,8 @@ void *producer(void *arg) {
         // Escribir una línea en el buffer
         int j = buffer_index;
         buffer_index++;
+
+        // Mover el índice circularmente
         if (buffer_index == MAX_BUFFERS)
             buffer_index = 0;
         buffers_available--;
@@ -101,9 +107,10 @@ void *producer(void *arg) {
     return NULL;
 }
 
+// Hilo spooler
 void *spooler(void *arg) {
     int r;
-    (void)arg; // Evita warning por argumento no usado
+    (void)arg;
 
     while (1) {
         // Bloquear el mutex para acceder al buffer compartido
@@ -122,6 +129,7 @@ void *spooler(void *arg) {
 
         // Mover el índice de impresión circularmente
         buffer_print_index++;
+        // Volver al inicio si se llega al final
         if (buffer_print_index == MAX_BUFFERS)
             buffer_print_index = 0;
 

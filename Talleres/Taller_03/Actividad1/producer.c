@@ -20,11 +20,10 @@ static int created_vacio = 0;   // Indica si este proceso creó el semáforo "va
 static int created_lleno = 0;   // Indica si este proceso creó el semáforo "lleno"
 
 /**
- * Manejador de señal SIGINT (Ctrl + C)
- * 
+ * Manejador de señal SIGINT
  * Si el proceso productor se interrumpe, este manejador asegura
  * que los recursos abiertos se cierren correctamente, sin eliminarlos
- * del sistema (otros procesos podrían seguir usándolos).
+ * del sistema.
  */
 void handle_sigint(int sig) {
     (void)sig;
@@ -40,14 +39,16 @@ int main(void) {
     // Captura Ctrl + C para limpiar correctamente
     signal(SIGINT, handle_sigint);
 
-    /** 
-     * Intento de crear los semáforos con O_CREAT | O_EXCL.
+    /* Intenta crear los semáforos con O_CREAT | O_EXCL.
      * Si ya existen, simplemente se abren sin crearlos de nuevo.
      */
     vacio = sem_open(SEM_VACIO_NAME, O_CREAT | O_EXCL, 0666, BUFFER);
+    // Si falla, verifica si es porque ya existe
     if (vacio == SEM_FAILED) {
+        // Verifica si el error es EEXIST
         if (errno == EEXIST) {
             vacio = sem_open(SEM_VACIO_NAME, 0);
+            // Verifica si la apertura fue exitosa
             if (vacio == SEM_FAILED) {
                 perror("sem_open (vacio) apertura existente");
                 exit(EXIT_FAILURE);
@@ -60,10 +61,14 @@ int main(void) {
         created_vacio = 1;
     }
 
+    // Crear o abrir el semáforo "lleno"
     lleno = sem_open(SEM_LLENO_NAME, O_CREAT | O_EXCL, 0666, 0);
+    // Si falla, verifica si es porque ya existe
     if (lleno == SEM_FAILED) {
+        // Verifica si el error es EEXIST
         if (errno == EEXIST) {
             lleno = sem_open(SEM_LLENO_NAME, 0);
+            // Verifica si la apertura fue exitosa
             if (lleno == SEM_FAILED) {
                 perror("sem_open (lleno) apertura existente");
                 sem_close(vacio);
@@ -78,19 +83,24 @@ int main(void) {
         created_lleno = 1;
     }
 
-    /**
-     * Intentar crear la memoria compartida. 
+    /* Intentar crear la memoria compartida. 
      * Si ya existe (EEXIST), se abre la existente para no sobrescribir.
      */
     shm_fd = shm_open(SHM_NAME, O_CREAT | O_EXCL | O_RDWR, 0666);
+    // Verificar si la creación fue exitosa
     if (shm_fd >= 0) {
         created_shm = 1;
         // Se define el tamaño necesario para el buffer compartido
         if (ftruncate(shm_fd, sizeof(compartir_datos)) == -1) {
             perror("ftruncate");
             sem_close(vacio); sem_close(lleno);
-            if (created_vacio) sem_unlink(SEM_VACIO_NAME);
-            if (created_lleno) sem_unlink(SEM_LLENO_NAME);
+            // Verificar si se crearon los recursos para eliminarlos
+            if (created_vacio)
+                sem_unlink(SEM_VACIO_NAME);
+
+            // Verificar si se creó el semáforo "lleno"
+            if (created_lleno)
+                sem_unlink(SEM_LLENO_NAME);
             shm_unlink(SHM_NAME);
             exit(EXIT_FAILURE);
         }
@@ -110,10 +120,14 @@ int main(void) {
 
     // Mapear la memoria compartida
     compartir = mmap(NULL, sizeof(compartir_datos), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+    // Verificar si el mapeo fue exitoso
     if (compartir == MAP_FAILED) {
         perror("mmap");
-        sem_close(vacio); sem_close(lleno);
-        if (created_shm) shm_unlink(SHM_NAME);
+        sem_close(vacio);
+        sem_close(lleno);
+        // Verificar si se crearon los recursos para eliminarlos
+        if (created_shm)
+            shm_unlink(SHM_NAME);
         exit(EXIT_FAILURE);
     }
 
@@ -121,7 +135,9 @@ int main(void) {
     if (created_shm) {
         compartir->entrada = 0;
         compartir->salida = 0;
-        for (int i = 0; i < BUFFER; ++i) compartir->bus[i] = 0;
+        // Inicializar el buffer a cero
+        for (int i = 0; i < BUFFER; ++i)
+            compartir->bus[i] = 0;
     }
 
     // Bucle principal del productor
@@ -149,14 +165,16 @@ int main(void) {
     }
 
     // Liberación de recursos locales
-    if (munmap(compartir, sizeof(compartir_datos)) == -1) perror("munmap");
-    if (close(shm_fd) == -1) perror("close shm_fd");
+    if (munmap(compartir, sizeof(compartir_datos)) == -1)
+        perror("munmap");
+
+    // Cerrar el descriptor de memoria compartida
+    if (close(shm_fd) == -1)
+        perror("close shm_fd");
     sem_close(vacio);
     sem_close(lleno);
 
-    /**
-     * No se hace unlink aquí porque otros procesos (como el consumidor)
-     * pueden seguir usando los recursos compartidos. 
+    /* No se hace unlink aquí porque otros procesos pueden seguir usando los recursos compartidos. 
      * El unlink se deja para el último proceso que termine.
      */
     printf("Productor: terminado correctamente.\n");
