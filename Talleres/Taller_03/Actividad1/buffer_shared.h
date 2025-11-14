@@ -9,7 +9,7 @@
 #define SEM_LLENO_NAME "/lleno"
 
 /** 
- * Estructura del buffer circular compartido entre productor y consumidor.
+ * Estructura compartida por el productor y consumidor.
  * Aquí se guardan los datos (bus), junto con los índices de entrada y salida
  * que controlan el acceso concurrente al buffer.
  */
