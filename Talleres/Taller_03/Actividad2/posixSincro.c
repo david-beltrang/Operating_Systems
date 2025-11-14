@@ -1,3 +1,15 @@
+/********************************************************
+*           Pontificia Universidad Javeriana            *
+*                                                       *
+*   Autor: David Esteban Beltrán Gómez                  *
+*   Fecha: 13 Noviembre 2025                            *
+*   Materia: Sistemas Operativos                        *
+*   Tema: OpenMP                                        *
+*   Descripción:                                        *
+*	    - Se crea el fichero que realizara las          *
+*        funciones de productor-consumidor utilizando   *
+*        hilos POSIX, mutex y variables de condición    *
+*********************************************************/
 #include "posixSincro.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,7 +119,7 @@ void *producer(void *arg) {
     return NULL;
 }
 
-// Hilo spooler
+// Hilo Consumidor (spooler)
 void *spooler(void *arg) {
     int r;
     (void)arg;
