@@ -1,3 +1,16 @@
+/********************************************************
+*           Pontificia Universidad Javeriana            *
+*                                                       *
+*   Autor: David Esteban Beltrán Gómez                  *
+*   Fecha: 13 Noviembre 2025                            *
+*   Materia: Sistemas Operativos                        *
+*   Tema: OpenMP                                        *
+*   Descripción:                                        *
+*	    - Se crea el fichero que realizara las          *
+*        funciones de productor en el problema          *
+*        productor-consumidor utilizando memoria        *
+*        compartida y semáforos para la sincronización. *
+*********************************************************/
 #define _POSIX_C_SOURCE 200809L
 #include "buffer_shared.h"
 #include <stdio.h>
