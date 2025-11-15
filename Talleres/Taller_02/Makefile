@@ -1,13 +1,13 @@
 #---------------------------------------------------------
 # Makefile - Multiplicación de matrices (Fork, Posix, OpenMP)
-# Autor: Xamuel Pérez Madrigal
+# Autor: David Esteban Beltrán Gómez
 # Fecha: 30 Octubre 2025
 # Propósito:
 #   Compilar los diferentes programas de multiplicación de matrices
 #---------------------------------------------------------
 
 GCC = gcc
-CFLAGS = -Wall -O3 -lm
+CFLAGS = -O3 -lm
 FOPENMP = -fopenmp
 POSIX = -lpthread
 

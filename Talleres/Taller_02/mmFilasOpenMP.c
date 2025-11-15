@@ -1,6 +1,6 @@
 /*#######################################################################################
  #* Fecha: 30 Octubre 2025
- #* Autor: Xamuel Pérez Madrigal
+ #* Autor: David Esteban Beltrán Gómez
  #* Programa:
  #*      Multiplicación de Matrices algoritmo matriz Transpuesta (Filas x Filas) 
  #* Versión:

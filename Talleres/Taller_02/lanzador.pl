@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #######################################################################################
 #* Fecha: 30 Octubre 2025
-#* Autor: Xamuel Pérez Madrigal
+#* Autor: David Esteban Beltrán Gómez
 #* Programa:
 #*      agregar_estadisticas.py
 #* Propósito:
