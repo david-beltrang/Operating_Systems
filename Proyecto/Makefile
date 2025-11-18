@@ -7,17 +7,28 @@
 ###########################################################################
 
 GCC   = gcc
-FLAGS = -pthread -lrt -Wall
+FLAGS = -pthread -Wall
 
-PROGRAMAS = controlador agente
+AGENTE      = agente
+CONTROLADOR = controlador
 
-all: $(PROGRAMAS)
+AGENTE_SRC = agenteFicheros/agente.c \
+             agenteFicheros/mainAgente.c
 
-controlador:
-	$(GCC) controlador/*.c -o $@ $(FLAGS)
+CONTROL_SRC = controladorFicheros/hilo.c \
+              controladorFicheros/manejadores.c \
+              controladorFicheros/procesos.c \
+              controladorFicheros/reporte.c \
+              controladorFicheros/reservas.c \
+              controladorFicheros/mainControlador.c
 
-agente:
-	$(GCC) agente/*.c -o $@ $(FLAGS)
+all: $(AGENTE) $(CONTROLADOR)
+
+$(AGENTE):
+	$(GCC) $(AGENTE_SRC) -o $@ $(FLAGS)
+
+$(CONTROLADOR):
+	$(GCC) $(CONTROL_SRC) -o $@ $(FLAGS)
 
 clean:
-	$(RM) $(PROGRAMAS)
+	$(RM) $(AGENTE) $(CONTROLADOR)
