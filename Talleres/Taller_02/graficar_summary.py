@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #######################################################################################
 #* Fecha: 30 Octubre 2025
-#* Autor: Xamuel Pérez Madrigal
+#* Autor: David Esteban Beltrán Gómez
 #* Programa:
 #*      graficar_summary.py
 #* Propósito:
