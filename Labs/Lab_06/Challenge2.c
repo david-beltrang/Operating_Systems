@@ -30,10 +30,16 @@ void *funcion(void *arg){
 
 int main(){
     pthread_t hilo_ID[NHILOS];                       // Arreglo para almacenar los identificadores de los hilos
+    int ids[NHILOS];                                 // Arreglo con ID único por hilo
     int i;                                           // Variable para el índice del bucle(moverse en los hilos)
 
-    for(i = 0; i < NHILOS; i++)                      // Bucle para crear NHILOS hilos
-        pthread_create(&hilo_ID[i], NULL, funcion, &i); // Crea cada hilo, pasándole la funcion y el valor de 'i' como argumento
+    for(i = 0; i < NHILOS; i++) {                    // Bucle para crear NHILOS hilos
+        ids[i] = i;                                  // Asignar ID único a cada hilo
+        pthread_create(&hilo_ID[i], NULL, funcion, &ids[i]); // Crea cada hilo, pasándole su ID como argumento
+    }
+
+    for(i = 0; i < NHILOS; i++)                      // Esperar a que todos los hilos terminen
+        pthread_join(hilo_ID[i], NULL);
 
     printf("Contador final: %d\n", counter);         // Imprime el valor final del contador
     return 0;                                        // Termina el programa correctamente

@@ -4,7 +4,10 @@
  * Materia: Sistemas Operativos
  * Tema: Verificación con mutex-lock-unlock
  * Descripción: Crear tres hilos que ejecutan una tarea simulado y muestran resultados.
-*************************************************************************************/
+ * Intencional: este programa muestra una condicion de carrera (race condition)
+ * en la variable compartida 'acumulado'. Comparar con Challenge6 (version corregida
+ * con mutex).
+ *************************************************************************************/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
