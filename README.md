@@ -98,4 +98,4 @@ No automated tests exist. Individual programs can be run manually (see compile/r
 
 ## Author
 
-David Beltran Gomez -- Computer Engineering, Pontificia Universidad Javeriana
+David Beltran Gomez -- Systems Engineering, Pontificia Universidad Javeriana
