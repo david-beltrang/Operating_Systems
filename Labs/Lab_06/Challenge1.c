@@ -16,7 +16,7 @@ void *print_message_function(void *ptr) {
     printf("%s \n", message);       // Imprime el mensaje ("Thread 1" o "Thread 2")
 }
 
-void main() {
+int main() {
     pthread_t thread1, thread2;     // Declara dos variables de tipo pthread_t para los dos hilos
     char *message1 = "Thread 1";    // Define el mensaje para el primer hilo
     char *message2 = "Thread 2";    // Define el mensaje para el segundo hilo
