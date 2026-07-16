@@ -6,7 +6,7 @@
 ############################################
 
 GCC = gcc
-FLAGS = -fopenmp -lm
+FLAGS =
 
 PROGRAMAS = Challenge1 Challenge2
 
