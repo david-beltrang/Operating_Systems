@@ -7,7 +7,7 @@
 *   Materia: Sistemas Operativos                                            *
 *****************************************************************************/
 
-#include "util.h"
+#include "shared.h"
 #include "agente.h"
 
 int procesar_agente(const char *nombre_arg, const char *archivo_arg, const char *pipe_principal_arg) {
@@ -41,8 +41,9 @@ int procesar_agente(const char *nombre_arg, const char *archivo_arg, const char 
     // 2. Registrarse en el controlador
     int fd = open(pipe_principal, O_WRONLY);
     // Comprobar si se pudo abrir el pipe principal
-    if (fd == -1)
+    if (fd == -1) {
         perror("open principal"); return 1;
+    }
 
     // Buffer para el mensaje de registro
     char mensaje[BUFFER];
@@ -56,8 +57,9 @@ int procesar_agente(const char *nombre_arg, const char *archivo_arg, const char 
     // 3. Esperar hora actual
     int fd_resp = open(pipe_personal, O_RDONLY);
     // Comprobar si se pudo abrir el pipe personal
-    if (fd_resp == -1)
+    if (fd_resp == -1) {
         perror("open personal"); return 1;
+    }
 
     // Buffer para la respuesta del controlador
     char resp[BUFFER];
@@ -72,8 +74,9 @@ int procesar_agente(const char *nombre_arg, const char *archivo_arg, const char 
     // 4. Procesar archivo CSV
     FILE *f = fopen(archivo, "r");
     // Comprobar si se pudo abrir el archivo CSV
-    if (!f)
+    if (!f) {
         perror("fopen csv"); return 1;
+    }
 
     char linea[256];
 

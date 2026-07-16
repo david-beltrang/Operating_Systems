@@ -12,7 +12,7 @@
 *                                                                           *
 *****************************************************************************/
 
-#include "util.h"
+#include "shared.h"
 #include "agente.h"
 
 int main(int argc, char *argv[]) {
