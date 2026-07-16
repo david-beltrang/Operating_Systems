@@ -7,11 +7,12 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 int main (){
         printf("\n#=>Inicio del proceso main o proceso principal<=#\n\n");
         /*Se crea un proceso usando la funcion fork() que retorna el ID del proceso*/
-        int procesoID = fork();
+        pid_t procesoID = fork();
 
         /* Se verifica si fork() retorno un valor positivo o negativo para saber si es proceso padre o hijo */
         if(procesoID>0)
