@@ -91,22 +91,6 @@ Operating_Systems/
 
 No automated tests exist. Individual programs can be run manually (see compile/run instructions). `Talleres/Taller_02` includes benchmarking infrastructure (Perl launcher, Python aggregation/plotting) but that is for performance measurement, not correctness verification.
 
-## Code smell audit
-
-Status after the 2025-07-16 bug-fix pass:
-
-| # | Location | Issue | Fixed? | Notes |
-|---|---|---|---|---|
-| 1 | `Proyecto/agente/` (deleted) | `#include "util.h"` instead of `"shared.h"`; missing braces in 3 if statements causing unconditional `return 1` | Yes | Directory removed; fixed version in `agenteFicheros/` |
-| 2 | `Labs/Lab_06/Challenge9.c` | `buscarMax()` called as regular function with wrong arg type; loop started at 0 instead of `inicio`; threading never implemented | Yes | Rewritten to create threads, pass `param_H*`, iterate from `inicio` to `fin`, compute global max from partial maxes |
-| 3 | `Proyecto/agente/`, `Proyecto/controlador/` (deleted) | Duplicate directories not referenced by Makefile | Yes | Removed; only `*Ficheros/` variants remain |
-| 4a | `Labs/Lab_06/Challenge2.c` | `pthread_create` passes `&i` (loop variable) to all threads -- race on argument read | Yes | Replaced with `ids[]` array; added `pthread_join` loop before printing counter |
-| 4b | `Labs/Lab_06/Challenge7.c` | Mutex and condition-variable code commented out, leaving `valor` unprotected | Yes | Uncommented sync code |
-| 4c | `Labs/Lab_06/Challenge5.c` | `acumulado += xi * xi` without mutex | Intentionally pedagogical | Left as-is; added clarifying comment that race condition is intentional (compare with Challenge6) |
-| 5 | `Labs/Lab_06/Challenge1.c` | `void main()` instead of `int main()` | Yes | Changed to `int main()` |
-| 6 | `Labs/Lab_04/Challenge_01.c` | `int` used for `fork()` return value instead of `pid_t` | Yes | Changed to `pid_t`; added `#include <sys/types.h>` |
-| 7 | `Labs/Lab_08/Makefile` | `-fopenmp -lm` flags set but neither OpenMP nor math functions used | Yes | Flags removed (`FLAGS =`) |
-
 ## Author
 
 David Beltran Gomez -- Systems Engineering, Pontificia Universidad Javeriana
